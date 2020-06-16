@@ -37,7 +37,7 @@ public class ApisUtil {
             scanner.useDelimiter("\\A");
 
             boolean hasData = scanner.hasNext();
-            
+
             if (hasData) {
                 return scanner.next();
             } else {
