@@ -14,7 +14,7 @@ public class ApisUtil {
 
     private static final String BASE_API_URL = "https://www.googleapis.com/books/v1/volumes";
 
-    private static URL buildUrl(String title){
+    public static URL buildUrl(String title){
         String fullUrl = BASE_API_URL + "?q=" + title;
         URL url = null;
 
@@ -27,7 +27,7 @@ public class ApisUtil {
         return url;
     }
 
-    private static String getJson(URL url) throws IOException {
+    public static String getJson(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 
