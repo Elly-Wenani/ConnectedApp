@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
                 tvResult.setVisibility(View.VISIBLE);
                 textViewErrorLoadingData.setVisibility(View.INVISIBLE);
             }
+
+            ArrayList<Book> books = ApisUtil.getBooksFromJson(result);
+            String resultString = "";
+
+            for (Book book : books) {
+                resultString = resultString + book.title + "\n" +
+                        book.publishedDate + "\n\n";
+            }
+            tvResult.setText(resultString);
         }
 
         @Override
