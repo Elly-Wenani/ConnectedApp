@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     ProgressBar mProgressBar;
     RecyclerView rvBooks;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             URL bookUrl = ApisUtil.buildUrl("cooking");
-            new BookQueryTask().execute(bookUrl);
+            new BooksQueryTask().execute(bookUrl);
 
         } catch (Exception e) {
             Log.d("error", e.getMessage());
@@ -45,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
         rvBooks.setLayoutManager(booksLayoutManager);
     }
 
-    /*
-    //sdgdfdf
-
+    //Inflating the menu with a search button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.book_list_menu, menu);
@@ -59,14 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        try {
-            URL bookUrl = ApisUtil.buildUrl(query);
-            new BooksQueryTask().execute(bookUrl);
-        }
-        catch (Exception e) {
-            Log.d("error", e.getMessage());
-        }
-
 
         return false;
     }
@@ -76,10 +66,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    //sdgdfdf
-    */
-
-    public class BookQueryTask extends AsyncTask<URL, Void, String> {
+    public class BooksQueryTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected String doInBackground(URL... urls) {
