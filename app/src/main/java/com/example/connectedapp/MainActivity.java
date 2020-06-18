@@ -1,10 +1,16 @@
 package com.example.connectedapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,7 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ProgressBar mProgressBar;
-    TextView textViewErrorLoadingData;
+    RecyclerView rvBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,16 +30,54 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mProgressBar = findViewById(R.id.mProgressBar);
-        textViewErrorLoadingData = findViewById(R.id.tvErrorLoadingData);
+        rvBooks = findViewById(R.id.rv_books);
 
         try {
             URL bookUrl = ApisUtil.buildUrl("cooking");
             new BookQueryTask().execute(bookUrl);
 
         } catch (Exception e) {
-            Log.d("Error", e.getMessage());
+            Log.d("error", e.getMessage());
         }
+
+        LinearLayoutManager booksLayoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL, false);
+        rvBooks.setLayoutManager(booksLayoutManager);
     }
+
+    /*
+    //sdgdfdf
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.book_list_menu, menu);
+        final MenuItem searchItem=menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        try {
+            URL bookUrl = ApisUtil.buildUrl(query);
+            new BooksQueryTask().execute(bookUrl);
+        }
+        catch (Exception e) {
+            Log.d("error", e.getMessage());
+        }
+
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    //sdgdfdf
+    */
 
     public class BookQueryTask extends AsyncTask<URL, Void, String> {
 
@@ -52,26 +96,23 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            TextView tvResult = findViewById(R.id.tvResponse);
+
+            TextView tvError = findViewById(R.id.tvErrorLoadingData);
             mProgressBar.setVisibility(View.INVISIBLE);
-            tvResult.setText(result);
 
             if (result == null) {
-                tvResult.setVisibility(View.INVISIBLE);
-                textViewErrorLoadingData.setVisibility(View.VISIBLE);
+                rvBooks.setVisibility(View.INVISIBLE);
+                tvError.setVisibility(View.VISIBLE);
             } else {
-                tvResult.setVisibility(View.VISIBLE);
-                textViewErrorLoadingData.setVisibility(View.INVISIBLE);
+                rvBooks.setVisibility(View.VISIBLE);
+                tvError.setVisibility(View.INVISIBLE);
             }
 
             ArrayList<Book> books = ApisUtil.getBooksFromJson(result);
             String resultString = "";
 
-            for (Book book : books) {
-                resultString = resultString + book.title + "\n" +
-                        book.publishedDate + "\n\n";
-            }
-            tvResult.setText(resultString);
+            BooksAdapter adapter = new BooksAdapter(books);
+            rvBooks.setAdapter(adapter);
         }
 
         @Override
