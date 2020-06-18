@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Connected App</string>
+    <string name="error_loading">Error loading data</string>
 </resources>

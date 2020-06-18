@@ -1,5 +1,6 @@
 package com.example.connectedapp;
 
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -10,18 +11,26 @@ import java.util.Scanner;
 
 public class ApisUtil {
 
-    private ApisUtil(){}
+    private ApisUtil() {}
 
-    private static final String BASE_API_URL = "https://www.googleapis.com/books/v1/volumes";
+    public static final String BASE_API_URL = "https://www.googleapis.com/books/v1/volumes";
 
-    public static URL buildUrl(String title){
-        String fullUrl = BASE_API_URL + "?q=" + title;
+    public static final String QUERY_PARAMETER_KEY = "q";
+    public static final String KEY = "key";
+    public static final String API_KEY = "keyhere";
+
+    public static URL buildUrl(String title) {
+        //String fullUrl = BASE_API_URL + "?q=" + title;
         URL url = null;
+        Uri uri = Uri.parse(BASE_API_URL).buildUpon()
+                .appendQueryParameter(QUERY_PARAMETER_KEY, title)
+                .appendQueryParameter(KEY, API_KEY)
+                .build();
 
         try {
-            url = new URL(fullUrl);
-        }
-        catch (Exception e){
+            //url = new URL(fullUrl);
+            url = new URL(uri.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return url;
@@ -43,12 +52,10 @@ public class ApisUtil {
             } else {
                 return null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("Error", e.toString());
             return null;
-        }
-
-        finally {
+        } finally {
             connection.disconnect();
         }
     }
