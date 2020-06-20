@@ -2,32 +2,38 @@ package com.example.connectedapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import org.w3c.dom.Text;
 
 public class Book implements Parcelable {
 
     public String id;
     public String title;
     public String subTitle;
-    public String[] authors;
+    public String authors;
     public String publisher;
     public String publishedDate;
+    public String description;
 
-    public Book(String id, String title, String subTitle, String[] authors, String publisher, String publishedDate) {
+    public Book(String id, String title, String subTitle, String[] authors, String publisher, String publishedDate, String description) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
-        this.authors = authors;
+        this.authors = TextUtils.join(", ", authors); //Joins iterable like an array and returns a string
         this.publisher = publisher;
         this.publishedDate = publishedDate;
+        this.description = description;
     }
 
     protected Book(Parcel in) {
         id = in.readString();
         title = in.readString();
         subTitle = in.readString();
-        authors = in.createStringArray();
+        authors = in.readString();
         publisher = in.readString();
         publishedDate = in.readString();
+        description = in.readString();
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -52,8 +58,9 @@ public class Book implements Parcelable {
         dest.writeString(id);
         dest.writeString(title);
         dest.writeString(subTitle);
-        dest.writeStringArray(authors);
+        dest.writeString(authors);
         dest.writeString(publisher);
         dest.writeString(publishedDate);
+        dest.writeString(description);
     }
 }

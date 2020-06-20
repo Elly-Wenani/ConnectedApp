@@ -50,7 +50,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         return books.size();
     }
 
-    public class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvTitle;
         TextView tvAuthors;
@@ -69,18 +69,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         public void bind(Book book) {
             tvTitle.setText(book.title);
-            String authors = "";
-
-            int i = 0;
-            for (String author : book.authors) {
-                authors += author;
-                i++;
-
-                if (i < book.authors.length) {
-                    authors += ", ";
-                }
-            }
-            tvAuthors.setText(authors);
+            //String authors = ""; he changed back to this
+            tvAuthors.setText(book.authors);
             tvDate.setText(book.publishedDate);
             tvPublisher.setText(book.publisher);
         }
