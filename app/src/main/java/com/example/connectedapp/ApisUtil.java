@@ -1,5 +1,6 @@
 package com.example.connectedapp;
 
+
 import android.net.Uri;
 import android.util.Log;
 
@@ -24,6 +25,7 @@ public class ApisUtil {
     public static final String QUERY_PARAMETER_KEY = "q";
     public static final String KEY = "key";
     public static final String API_KEY = "AIzaSyCK9Z5fuQBLM0RXV58u1Wmkt9zznb0269c";
+
 
     public static URL buildUrl(String title) {
         //String fullUrl = BASE_API_URL + "?q=" + title;

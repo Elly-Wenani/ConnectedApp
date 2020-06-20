@@ -18,8 +18,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     TextView tvPublisher;
     TextView tvDate;
 
+    Context context;
+    Book book;
+
     ArrayList<Book> books;
-    public BooksAdapter (ArrayList<Book> books){
+
+    public BooksAdapter(ArrayList<Book> books) {
         this.books = books;
     }
 
@@ -27,7 +31,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        Context context = parent.getContext();
+        context = parent.getContext();
         View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.book_list_item, parent, false);
         return new BookViewHolder(itemView);
@@ -36,7 +40,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
 
-        Book book = books.get(position);
+        book = books.get(position);
         holder.bind(book);
     }
 
@@ -65,8 +69,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                 authors += author;
                 i++;
 
-                if (i<book.authors.length){
-                    authors+=", ";
+                if (i < book.authors.length) {
+                    authors += ", ";
                 }
             }
             tvAuthors.setText(authors);

@@ -1,11 +1,5 @@
 package com.example.connectedapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +9,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     ProgressBar mProgressBar;
     RecyclerView rvBooks;
+    TextView tvError;
+    //RecyclerView.Adapter adapter;
+    BooksAdapter adapter;
+    ArrayList<Book> books;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setContentView(R.layout.activity_main);
 
         mProgressBar = findViewById(R.id.mProgressBar);
+        tvError = findViewById(R.id.tvError);
         rvBooks = findViewById(R.id.rv_books);
+        //rvBooks.setHasFixedSize(true);
+        //rvBooks.setLayoutManager(new LinearLayoutManager(this));
 
         try {
             URL bookUrl = ApisUtil.buildUrl("cooking");
@@ -43,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         LinearLayoutManager booksLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         rvBooks.setLayoutManager(booksLayoutManager);
+
+
     }
 
     //Inflating the menu with a search button
@@ -84,22 +93,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         @Override
         protected void onPostExecute(String result) {
 
-            TextView tvError = findViewById(R.id.tvErrorLoadingData);
             mProgressBar.setVisibility(View.INVISIBLE);
+            books = ApisUtil.getBooksFromJson(result);
 
             if (result == null) {
                 rvBooks.setVisibility(View.INVISIBLE);
                 tvError.setVisibility(View.VISIBLE);
             } else {
+                adapter = new BooksAdapter(books);
+                rvBooks.setAdapter(adapter);
+
                 rvBooks.setVisibility(View.VISIBLE);
                 tvError.setVisibility(View.INVISIBLE);
             }
 
-            ArrayList<Book> books = ApisUtil.getBooksFromJson(result);
-            String resultString = "";
+            //String resultString = "";
 
-            BooksAdapter adapter = new BooksAdapter(books);
-            rvBooks.setAdapter(adapter);
+
+
+            //adapter =  new BooksAdapter(books);
+            //rvBooks.setAdapter(adapter);
         }
 
         @Override
