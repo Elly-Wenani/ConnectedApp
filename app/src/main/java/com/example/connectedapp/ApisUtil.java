@@ -147,7 +147,7 @@ public class ApisUtil {
                         (volumeInfoJSON.isNull(PUBLISHER) ? "" : volumeInfoJSON.getString(PUBLISHER)),
                         (volumeInfoJSON.isNull(PUBLISHED_DATE) ? "" : volumeInfoJSON.getString(PUBLISHED_DATE)),
                         (volumeInfoJSON.isNull(DESCRIPTION) ? "" : volumeInfoJSON.getString(DESCRIPTION)),
-                        (imageLinksObject == null) ? "" : imageLinksObject.getString(IMAGELINKS));
+                        (imageLinksObject == null) ? "" : imageLinksObject.getString(THUMBNAIL));
                 books.add(book);
             }
 

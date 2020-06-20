@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
+        ArrayList<String> recentList = SpUtil.getQueryList(getApplicationContext());
+        int itemNum = recentList.size();
+        MenuItem recentMenu;
+
+        for (int i = 0; i < itemNum; i++) {
+            recentMenu = menu.add(Menu.NONE, i, Menu.NONE, recentList.get(i));
+        }
+
         return true;
     }
 
@@ -82,6 +90,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 return true;
 
             default:
+
+                int position = item.getItemId() + 1;
+                String preferenceName = SpUtil.QUERY + String.valueOf(position);
+                String query = SpUtil.getPreferenceString(getApplicationContext(), preferenceName);
+
+                String[] prefParams = query.split("\\,");
+                String[] queryParams = new String[4];
+
+                for (int i = 0; i < prefParams.length; i++) {
+                    queryParams[i] = prefParams[i];
+                }
+
+                URL bookUrl = ApisUtil.buildUrl(
+                        (queryParams[0] == null)?"":queryParams[0],
+                        (queryParams[1] == null)?"":queryParams[1],
+                        (queryParams[2] == null)?"":queryParams[2],
+                        (queryParams[3] == null)?"":queryParams[3]
+                );
+
+                new BooksQueryTask().execute(bookUrl);
                 return super.onOptionsItemSelected(item);
         }
     }
