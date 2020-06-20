@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     ProgressBar mProgressBar;
     RecyclerView rvBooks;
@@ -41,8 +41,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //rvBooks.setHasFixedSize(true);
         //rvBooks.setLayoutManager(new LinearLayoutManager(this));
 
+        Intent intent = getIntent();
+        String query = intent.getStringExtra("Query");
+
+        URL bookUrl;
         try {
-            URL bookUrl = ApisUtil.buildUrl("cooking");
+
+            if (query == null || query.isEmpty()) {
+                bookUrl = ApisUtil.buildUrl("cooking");
+            } else {
+                bookUrl = new URL(query);
+            }
             new BooksQueryTask().execute(bookUrl);
 
         } catch (Exception e) {
@@ -52,15 +61,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         LinearLayoutManager booksLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         rvBooks.setLayoutManager(booksLayoutManager);
-
-
     }
 
     //Inflating the menu with a search button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.book_list_menu, menu);
-        final MenuItem searchItem=menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         return true;
@@ -68,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_advanced_search:
                 Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
@@ -109,25 +116,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         protected void onPostExecute(String result) {
 
             mProgressBar.setVisibility(View.INVISIBLE);
-            books = ApisUtil.getBooksFromJson(result);
 
             if (result == null) {
                 rvBooks.setVisibility(View.INVISIBLE);
                 tvError.setVisibility(View.VISIBLE);
             } else {
-                adapter = new BooksAdapter(books);
-                rvBooks.setAdapter(adapter);
-
                 rvBooks.setVisibility(View.VISIBLE);
                 tvError.setVisibility(View.INVISIBLE);
+                String resultString = "";
+
+                books = ApisUtil.getBooksFromJson(result);
+                adapter = new BooksAdapter(books);
+                rvBooks.setAdapter(adapter);
             }
-
-            //String resultString = "";
-
-
-
-            //adapter =  new BooksAdapter(books);
-            //rvBooks.setAdapter(adapter);
         }
 
         @Override
